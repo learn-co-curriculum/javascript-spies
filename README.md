@@ -93,6 +93,48 @@ describe('store', function () {
 As you can see, using spies is relatively straight-forward and makes writing tests a lot more
 pleasant. See the [Sinon.js docs on spies](http://sinonjs.org/docs/#spies) to discover its full API.
 
+## Spying on existing functions
+Sometimes, we're testing a function where we have to verify that another function has been called.
+Rather than completely overwriting the function to be called with a spy of our own (and re-implementing
+all of its logic in the process, or the test will fail), we can just spy on the _existing function_
+instead!
+
+Spying on functions is especially handy when trying to verify if your code is calling library
+functions correctly (for example, a jQuery AJAX call). Let's take a look at some example code:
+
+```js
+function sayHello(name) {
+  console.log(`Hello, ${name}!`);
+}
+
+function welcomePersonAtTheDoor(person) {
+  door.open();
+  sayHello(person.firstName);
+  door.close();
+}
+```
+
+Let's say we want to verify that the `sayHello()` function works as intended. We can simply spy on
+that function using Sinon:
+
+```js
+describe('welcomePersonAtTheDoor()', function () {
+  it('should call the sayHello() function', function () {
+    const spy = sinon.spy(window, 'sayHello');
+    welcomePersonAtTheDoor({firstName: 'George'});
+    expect(spy.calledOnce).toBeTruthy();
+  });
+});
+```
+
+What's happening here? Well, Sinon is basically _wrapping_ the `sayHello()` function so that we can
+spy on the function and verify that it has been called. That's it!
+
+You'll notice that the syntax to create a spy might look a little weird — it has two arguments, the
+first one being the objec that the function is a property of, and the second one is the function's
+name as a string. Since our function is defined globally, we pass in `window` as the first argument,
+since that is the object that holds all global variables and functions.
+
 
 ## Where's the magic?
 ![Magic](https://media1.giphy.com/media/61uXIVNCSsTrq/200.gif)
