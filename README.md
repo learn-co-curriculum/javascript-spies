@@ -131,7 +131,7 @@ What's happening here? Well, Sinon is basically _wrapping_ the `sayHello()` func
 spy on the function and verify that it has been called. That's it!
 
 You'll notice that the syntax to create a spy might look a little weird — it has two arguments, the
-first one being the objec that the function is a property of, and the second one is the function's
+first one being the object that the function is a property of, and the second one is the function's
 name as a string. Since our function is defined globally, we pass in `window` as the first argument,
 since that is the object that holds all global variables and functions.
 
@@ -153,7 +153,7 @@ function createSpy() {
   spy.callCount = 0;
 
   spy.wasCalled = () => this.callCount > 0;
-  
+
   return spy;
 }
 ```
